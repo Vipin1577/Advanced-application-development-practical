@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentRecordsApp">
+<head>
+    <meta charset="UTF-8">
+    <title>table page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body>
+
+<div ng-controller="studentController">
+   <center> <h1>Student Records</h1></center>
+
+    <!-- Form for adding a new student -->
+    <form ng-submit="addStudent()">
+       <center> <label>Name:</label>
+        <input type="text" ng-model="newStudent.name" required><br>
+        <label>Age:</label>&nbsp;&nbsp;&nbsp;
+        <input type="number" ng-model="newStudent.age" required><br>
+        <button type="submit">Add Student</button></center>
+    </form>
+
+    <!-- Table to display student records -->
+   <center> <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="student in students">
+            <td>{{ student.name }}</td>
+            <td>{{ student.age }}</td>
+            <td>
+                <button ng-click="editStudent(student)">Edit</button>
+                <button ng-click="deleteStudent(student)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Form for editing a student -->
+   <form ng-show="isEditing" ng-submit="updateStudent()">
+    <label>Name:</label>
+        <input type="text" ng-model="editedStudent.name" required><br>
+        <label>Age:</label>
+        <input type="number" ng-model="editedStudent.age" required><br>
+        <button type="submit">Update</button>
+        <button type="button" ng-click="cancelEdit()">Cancel</button>
+        
+    </form>
+
+</div>
+
+<script>
+    var app = angular.module('studentRecordsApp', []);
+
+    app.controller('studentController', function($scope) {
+        $scope.students = [
+        { name: 'Vipin ', age: 18 },
+        { name: 'Ayush', age: 18 }
+        ]
+        $scope.newStudent = {};
+        $scope.editedStudent = {};
+        $scope.isEditing = false;
+
+        $scope.addStudent = function() {
+            $scope.students.push(angular.copy($scope.newStudent));
+            $scope.newStudent = {};
+        };
+
+        $scope.editStudent = function(student) {
+            $scope.isEditing = true;
+            $scope.editedStudent = angular.copy(student);
+        };
+
+        $scope.updateStudent = function() {
+            var index = $scope.students.findIndex(function(student) {
+                return student.name === $scope.editedStudent.name;
+            });
+            $scope.students[index] = angular.copy($scope.editedStudent);
+            $scope.isEditing = false;
+            $scope.editedStudent = {};
+        };
+
+        $scope.cancelEdit = function() {
+            $scope.isEditing = false;
+            $scope.editedStudent = {};
+        };
+
+        $scope.deleteStudent = function(student) {
+            var index = $scope.students.indexOf(student);
+            $scope.students.splice(index, 1);
+        };
+    });
+</script>
+
+</body>
+</html>
+
+

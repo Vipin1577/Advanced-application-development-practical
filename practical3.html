@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="validationApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS Form Validation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body>
+
+<div ng-controller="validationController">
+    <form name="myForm" novalidate>
+        <label>UserName:</label>
+        <input type="text" name="name" ng-model="user.name" required><br>
+        <div ng-show="myForm.name.$dirty && myForm.name.$invalid">
+            <span ng-show="myForm.name.$error.required">Name is required.</span>
+        </div>
+
+        <label>Email:</label>
+        <input type="email" name="email" ng-model="user.email" required><br>
+        <div ng-show="myForm.email.$dirty && myForm.email.$invalid">
+            <span ng-show="myForm.email.$error.required">Email is required.</span>
+            <span ng-show="myForm.email.$error.email">Invalid email address.</span>
+        </div>
+
+        <button type="button" ng-click="submitForm()" ng-disabled="myForm.$invalid">Submit</button>
+    </form>
+
+    <div ng-if="submitted">
+        <h3>Form Submitted Successfully!</h3>
+        <p>Name: {{ user.name }}</p>
+        <p>Email: {{ user.email }}</p>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('validationApp', []);
+
+    app.controller('validationController', function($scope) {
+        $scope.user = {};
+
+        $scope.submitForm = function() {
+            $scope.submitted = true;
+
+            
+            if ($scope.myForm.$valid) {
+                
+                console.log('Form submitted successfully!');
+            }
+        };
+    });
+</script>
+
+</body>
+</html>
+
